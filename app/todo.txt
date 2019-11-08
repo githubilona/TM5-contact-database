@@ -1,0 +1,2 @@
+1. Import from contacts photo isn't displayed - Permission Denial Exception
+    Use api < 23 and ask for permission in manifest. Above API 23 you need to grant permission in code during runtime.
