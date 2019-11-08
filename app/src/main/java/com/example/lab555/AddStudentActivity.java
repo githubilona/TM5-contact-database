@@ -38,6 +38,7 @@ public class AddStudentActivity extends AppCompatActivity {
     ImageView imageView;
     private static final int PICK_CONTACT_REQUEST = 1;
     String photoUri;
+    Bitmap bitmap;
 
     public void importContactsOnClick(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -47,9 +48,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
-
         super.onActivityResult(reqCode, resultCode, data);
-
 
         switch (reqCode) {
             case (1):
@@ -63,7 +62,7 @@ public class AddStudentActivity extends AppCompatActivity {
                             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                             String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                            nameEditText.setText(contactName+" "+ contactId);
+                            nameEditText.setText(contactName + " " + contactId);
 
                             if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                 // Query phone here. Covered next
@@ -73,24 +72,19 @@ public class AddStudentActivity extends AppCompatActivity {
                             }
 
                             photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
-                            if(photoUri == null){
+                            if (photoUri == null) {
                                 imageView.setImageResource(R.drawable.empty);
-                            }else{
+                            } else {
                                 try {
                                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(photoUri));
-                                    if(bitmap == null){
-                                        imageView.setImageResource(R.drawable.empty);
-                                    }else{
-                                        imageView.setImageBitmap(bitmap);
-                                    }
-
+                                    imageView.setImageBitmap(bitmap);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
                             }
 
                         }
-                   }
+                    }
                 }
                 break;
         }
@@ -141,7 +135,14 @@ public class AddStudentActivity extends AppCompatActivity {
 
         returnIntent.putExtra("resultName", name);
         returnIntent.putExtra("resultPhone", phone);
-        returnIntent.putExtra("photoUri", Uri.parse(photoUri));
+
+       if(photoUri == null){
+           Uri emptyPhotoUri = Uri.parse("android.resource://com.example.lab555/" + R.drawable.empty);
+           returnIntent.putExtra("photoUri",emptyPhotoUri );
+       }else{
+           returnIntent.putExtra("photoUri", Uri.parse(photoUri));
+       }
+
 
         if (name.toString().equals("") || phone.toString().equals("")) {
             setResult(Activity.RESULT_CANCELED, returnIntent);
@@ -162,7 +163,7 @@ public class AddStudentActivity extends AppCompatActivity {
         imageView = findViewById(R.id.imageView);
 
         imageView.setImageResource(R.drawable.empty);
-      //  imageView.setImageURI(Uri.parse("content://com.android.contacts/display_photo/4"));
+        //  imageView.setImageURI(Uri.parse("content://com.android.contacts/display_photo/4"));
     }
 
 }

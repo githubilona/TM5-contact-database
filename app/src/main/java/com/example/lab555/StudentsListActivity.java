@@ -212,7 +212,7 @@ public class StudentsListActivity extends AppCompatActivity {
 
         students.add(new Student("Contact 1 ", "343-545-354"));
         students.add(new Student("Contact 2 ", "676-567-863"));
-        students.add(new Student("Contact 3 ", "965-667-863"));
+
 
 
 
