@@ -1,8 +1,12 @@
 package com.example.lab555;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,15 +17,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class AddStudentActivity extends AppCompatActivity {
 
@@ -29,7 +37,7 @@ public class AddStudentActivity extends AppCompatActivity {
     TextView phoneEditText;
     ImageView imageView;
     private static final int PICK_CONTACT_REQUEST = 1;
-    Uri photoUri;
+    String photoUri;
 
     public void importContactsOnClick(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -37,40 +45,11 @@ public class AddStudentActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
-    public Uri getImageUri(long contactId){
-        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-        Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-        System.out.println("PHOTO URI @@@@@@@@@@@@@@@@@@@@@@ "+ photoUri );
-        return photoUri;
-
-    }
-    public Bitmap openPhoto(long contactId) {
-        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
-        photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
-        System.out.println("PHOTO URI @@@@@@@@@@@@@@@@@@@@@@ "+ photoUri );
-        Cursor cursor = getContentResolver().query(photoUri,
-                new String[]{ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
-        try {
-            if (cursor.moveToFirst()) {
-                byte[] data = cursor.getBlob(0);
-                if (data != null) {
-                    return BitmapFactory.decodeStream(new ByteArrayInputStream(data));
-                }
-            }
-        } finally {
-            cursor.close();
-        }
-        return null;
-
-    }
-
     @Override
     public void onActivityResult(int reqCode, int resultCode, Intent data) {
 
         super.onActivityResult(reqCode, resultCode, data);
+
 
         switch (reqCode) {
             case (1):
@@ -84,24 +63,34 @@ public class AddStudentActivity extends AppCompatActivity {
                             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                             String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                            nameEditText.setText(contactName);
+                            nameEditText.setText(contactName+" "+ contactId);
 
                             if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                 // Query phone here. Covered next
                                 String ContctMobVar = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                                 Log.i("Number", ContctMobVar);
                                 phoneEditText.setText(ContctMobVar);
-
                             }
 
-                            Bitmap bitmap = openPhoto(Long.parseLong(contactId));
-                            if (bitmap == null) {
+                            photoUri = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.PHOTO_URI));
+                            if(photoUri == null){
                                 imageView.setImageResource(R.drawable.empty);
-                            } else {
-                                imageView.setImageBitmap(openPhoto(Long.parseLong(contactId)));
+                            }else{
+                                try {
+                                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(photoUri));
+                                    if(bitmap == null){
+                                        imageView.setImageResource(R.drawable.empty);
+                                    }else{
+                                        imageView.setImageBitmap(bitmap);
+                                    }
+
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
                             }
+
                         }
-                    }
+                   }
                 }
                 break;
         }
@@ -152,7 +141,7 @@ public class AddStudentActivity extends AppCompatActivity {
 
         returnIntent.putExtra("resultName", name);
         returnIntent.putExtra("resultPhone", phone);
-        returnIntent.putExtra("photoUri", photoUri);
+        returnIntent.putExtra("photoUri", Uri.parse(photoUri));
 
         if (name.toString().equals("") || phone.toString().equals("")) {
             setResult(Activity.RESULT_CANCELED, returnIntent);
@@ -172,8 +161,8 @@ public class AddStudentActivity extends AppCompatActivity {
         phoneEditText = findViewById(R.id.phoneEditText);
         imageView = findViewById(R.id.imageView);
 
-       // imageView.setImageResource(R.drawable.empty);
-        imageView.setImageURI(Uri.parse("content://com.android.contacts/contacts/2/photo"));
+        imageView.setImageResource(R.drawable.empty);
+      //  imageView.setImageURI(Uri.parse("content://com.android.contacts/display_photo/4"));
     }
 
 }
