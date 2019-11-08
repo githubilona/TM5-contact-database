@@ -2,6 +2,9 @@ package com.example.lab555;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -9,6 +12,7 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -79,8 +83,15 @@ public class StudentsListActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 CharSequence resultName = data.getCharSequenceExtra("resultName");
                 CharSequence resultPhone = data.getCharSequenceExtra("resultPhone");
+                Uri photoUri = data.getParcelableExtra("photoUri");
+//              //  if(getIntent().hasExtra("byteArray")) {
+//
+//                    Bitmap bitmap = BitmapFactory.decodeByteArray(
+//                            getIntent().getByteArrayExtra("byteArrayImage"), 0, getIntent().getByteArrayExtra("byteArrayImage").length);
+//                   // imageView.setImageBitmap(bitmap);
+//              //  }
 
-                addStudent(new Student(resultName + "", resultPhone + ""));
+                addStudent(new Student(resultName + "", resultPhone + "", photoUri));
 
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -202,6 +213,8 @@ public class StudentsListActivity extends AppCompatActivity {
         students.add(new Student("Contact 1 ", "343-545-354"));
         students.add(new Student("Contact 2 ", "676-567-863"));
         students.add(new Student("Contact 3 ", "965-667-863"));
+
+
 
 
     }

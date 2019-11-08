@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 
 public class AddStudentActivity extends AppCompatActivity {
 
@@ -25,6 +29,7 @@ public class AddStudentActivity extends AppCompatActivity {
     TextView phoneEditText;
     ImageView imageView;
     private static final int PICK_CONTACT_REQUEST = 1;
+    Uri photoUri;
 
     public void importContactsOnClick(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -32,9 +37,17 @@ public class AddStudentActivity extends AppCompatActivity {
         startActivityForResult(pickContactIntent, PICK_CONTACT_REQUEST);
     }
 
-    public Bitmap openPhoto(long contactId) {
+    public Uri getImageUri(long contactId){
         Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
         Uri photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        System.out.println("PHOTO URI @@@@@@@@@@@@@@@@@@@@@@ "+ photoUri );
+        return photoUri;
+
+    }
+    public Bitmap openPhoto(long contactId) {
+        Uri contactUri = ContentUris.withAppendedId(ContactsContract.Contacts.CONTENT_URI, contactId);
+        photoUri = Uri.withAppendedPath(contactUri, ContactsContract.Contacts.Photo.CONTENT_DIRECTORY);
+        System.out.println("PHOTO URI @@@@@@@@@@@@@@@@@@@@@@ "+ photoUri );
         Cursor cursor = getContentResolver().query(photoUri,
                 new String[]{ContactsContract.Contacts.Photo.PHOTO}, null, null, null);
         if (cursor == null) {
@@ -80,13 +93,13 @@ public class AddStudentActivity extends AppCompatActivity {
                                 phoneEditText.setText(ContctMobVar);
 
                             }
+
                             Bitmap bitmap = openPhoto(Long.parseLong(contactId));
                             if (bitmap == null) {
                                 imageView.setImageResource(R.drawable.empty);
                             } else {
                                 imageView.setImageBitmap(openPhoto(Long.parseLong(contactId)));
                             }
-
                         }
                     }
                 }
@@ -131,12 +144,15 @@ public class AddStudentActivity extends AppCompatActivity {
 //           }
 //        }
 //    }
+
     public void onFinishAddClick(View view) {
         Intent returnIntent = getIntent();
         CharSequence name = nameEditText.getText();
         CharSequence phone = phoneEditText.getText();
+
         returnIntent.putExtra("resultName", name);
         returnIntent.putExtra("resultPhone", phone);
+        returnIntent.putExtra("photoUri", photoUri);
 
         if (name.toString().equals("") || phone.toString().equals("")) {
             setResult(Activity.RESULT_CANCELED, returnIntent);
@@ -156,7 +172,8 @@ public class AddStudentActivity extends AppCompatActivity {
         phoneEditText = findViewById(R.id.phoneEditText);
         imageView = findViewById(R.id.imageView);
 
-        imageView.setImageResource(R.drawable.empty);
+       // imageView.setImageResource(R.drawable.empty);
+        imageView.setImageURI(Uri.parse("content://com.android.contacts/contacts/2/photo"));
     }
 
 }

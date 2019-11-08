@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -49,11 +50,14 @@ public class StudentsAdapter extends BaseAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         View row = inflater.inflate(layout, null);
         TextView studentName = row.findViewById(R.id.studentNameTextView);
-        TextView studentSurname = row.findViewById(R.id.studentPhoneTextView);
+        TextView studentPhone = row.findViewById(R.id.studentPhoneTextView);
+        ImageView image = row.findViewById(R.id.imageView);
 
         Student student = students.get(i);
         studentName.setText(student.getName());
-        studentSurname.setText(student.getPhone() + "");
+        studentPhone.setText(student.getPhone() + "");
+        image.setImageURI(student.getImageUri());
+
 
         if(layout==R.layout.student_list_item_multiple_choice){
             checkBoxes = new ArrayList<>();

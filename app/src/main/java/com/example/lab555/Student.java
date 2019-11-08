@@ -1,11 +1,13 @@
 package com.example.lab555;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Student implements Parcelable {
     private String name;
     private String phone;
+    private Uri imageUri;
 
     public Student() {
     }
@@ -13,6 +15,12 @@ public class Student implements Parcelable {
     public Student(String name, String phone) {
         this.name = name;
         this.phone = phone;
+    }
+
+    public Student(String name, String phone, Uri image) {
+        this.name = name;
+        this.phone = phone;
+        this.imageUri = image;
     }
 
     protected Student(Parcel in) {
@@ -57,5 +65,13 @@ public class Student implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
         parcel.writeString(phone);
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 }
