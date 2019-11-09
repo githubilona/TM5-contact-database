@@ -10,6 +10,8 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lab555.pojo.Student;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
