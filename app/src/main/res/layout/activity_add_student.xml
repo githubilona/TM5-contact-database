@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:focusableInTouchMode="true"
-    tools:context=".AddStudentActivity">
+    tools:context=".activities.AddStudentActivity">
 
     <EditText
         android:id="@+id/phoneEditText"

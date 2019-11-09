@@ -1,4 +1,4 @@
-package com.example.lab555;
+package com.example.lab555.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.lab555.R;
 import com.example.lab555.pojo.Student;
 
 import java.util.ArrayList;

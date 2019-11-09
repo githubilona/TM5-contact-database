@@ -1,9 +1,9 @@
-package com.example.lab555;
+package com.example.lab555.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -12,15 +12,26 @@ import android.util.SparseBooleanArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.lab555.LayoutType;
+import com.example.lab555.R;
+import com.example.lab555.SparseBooleanArrayParcelable;
+import com.example.lab555.pojo.Student;
+import com.example.lab555.adapters.StudentsAdapter;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_NAME;
+import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_PHONE;
+import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_PHOTO_URI;
+import static com.example.lab555.activities.DatabaseOpenHelper.TABLE_NAME;
+import static com.example.lab555.activities.DatabaseOpenHelper._ID;
 
 public class StudentsListActivity extends AppCompatActivity {
 
@@ -36,6 +47,9 @@ public class StudentsListActivity extends AppCompatActivity {
     int itemCount;
     LayoutType layoutType;
     boolean[] checked;
+
+    DatabaseOpenHelper mDbHelper;
+
 
     public void addStudent(Student student) {
         students.add(student);
@@ -84,20 +98,17 @@ public class StudentsListActivity extends AppCompatActivity {
                 CharSequence resultName = data.getCharSequenceExtra("resultName");
                 CharSequence resultPhone = data.getCharSequenceExtra("resultPhone");
                 Uri photoUri = data.getParcelableExtra("photoUri");
-//              //  if(getIntent().hasExtra("byteArray")) {
-//
-//                    Bitmap bitmap = BitmapFactory.decodeByteArray(
-//                            getIntent().getByteArrayExtra("byteArrayImage"), 0, getIntent().getByteArrayExtra("byteArrayImage").length);
-//                   // imageView.setImageBitmap(bitmap);
-//              //  }
 
                 addStudent(new Student(resultName + "", resultPhone + "", photoUri));
-
+                mDbHelper.addRecord(resultName+"", resultPhone+"", photoUri+"");
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Name and phone can't be empty!", Toast.LENGTH_LONG).show();
             }
         }
+
+
+
     }
 
 
@@ -180,7 +191,6 @@ public class StudentsListActivity extends AppCompatActivity {
     public void checkElements() {
         //   fillArray();
         List<CheckBox> checkBoxes = adapter.getCheckBoxes();
-        //System.out.println("-r-394uto83yghiu453t8-----------------" + checkBoxes.toString());
         System.out.println("item count   check   " + itemCount);
         System.out.println("checkedItemsPositions" + checkedItemsPositions.toString());
         System.out.println("boolena " + Arrays.toString(checked));
@@ -194,6 +204,7 @@ public class StudentsListActivity extends AppCompatActivity {
 
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -205,14 +216,18 @@ public class StudentsListActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelButton);
 
         listView = findViewById(R.id.listView);
-        students = new ArrayList<>();
+
+        mDbHelper = new DatabaseOpenHelper(this);
+
+
+        students = mDbHelper.readDBdata();
+
         setSimpleListView();
         // checked= adapter.getChecked();
 
 
-        students.add(new Student("Contact 1 ", "343-545-354"));
-        students.add(new Student("Contact 2 ", "676-567-863"));
-
+//        students.add(new Student("Contact 1 ", "343-545-354"));
+//        students.add(new Student("Contact 2 ", "676-567-863"));
 
 
 

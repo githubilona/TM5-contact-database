@@ -1,10 +1,12 @@
-package com.example.lab555;
+package com.example.lab555.pojo;
 
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Student implements Parcelable {
+    private Long id;
     private String name;
     private String phone;
     private Uri imageUri;
@@ -73,5 +75,13 @@ public class Student implements Parcelable {
 
     public void setImageUri(Uri imageUri) {
         this.imageUri = imageUri;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

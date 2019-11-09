@@ -1,34 +1,24 @@
-package com.example.lab555;
+package com.example.lab555.activities;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.Context;
+import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
+import com.example.lab555.R;
+
 import java.io.IOException;
 
 public class AddStudentActivity extends AppCompatActivity {
@@ -38,7 +28,7 @@ public class AddStudentActivity extends AppCompatActivity {
     ImageView imageView;
     private static final int PICK_CONTACT_REQUEST = 1;
     String photoUri;
-    Bitmap bitmap;
+
 
     public void importContactsOnClick(View view) {
         Intent pickContactIntent = new Intent(Intent.ACTION_PICK, Uri.parse("content://contacts"));
@@ -62,7 +52,7 @@ public class AddStudentActivity extends AppCompatActivity {
                             String contactId = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
                             String contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                            nameEditText.setText(contactName + " " + contactId);
+                            nameEditText.setText(contactName);
 
                             if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
                                 // Query phone here. Covered next
@@ -136,6 +126,7 @@ public class AddStudentActivity extends AppCompatActivity {
         returnIntent.putExtra("resultName", name);
         returnIntent.putExtra("resultPhone", phone);
 
+
        if(photoUri == null){
            Uri emptyPhotoUri = Uri.parse("android.resource://com.example.lab555/" + R.drawable.empty);
            returnIntent.putExtra("photoUri",emptyPhotoUri );
@@ -164,6 +155,9 @@ public class AddStudentActivity extends AppCompatActivity {
 
         imageView.setImageResource(R.drawable.empty);
         //  imageView.setImageURI(Uri.parse("content://com.android.contacts/display_photo/4"));
+
+
+
     }
 
 }
