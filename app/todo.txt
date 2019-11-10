@@ -1,7 +1,14 @@
+
+TODO #1. Checked checkbox remains unchecked after screen rotation - (If you create custom adapter, listView.setItemChecked(i, true)
+    is not working for custom adapter, you have to implement CheckableRelativeLayout )
+
+TODO #2. Unify Phone number format
+
+
+SOLVED PROBLEMS:
 1. Import from contacts photo isn't displayed - Permission Denial Exception
     Use api < 23 and ask for permission in manifest. Above API 23 you need to grant permission in code during runtime.
 
-#2. Checked checkbox remains unchecked after screen rotation - (If you create custom adapter, listView.setItemChecked(i, true)
-    is not working for custom adapter, you have to implement CheckableRelativeLayout )
+2. Can't delete newly added contact from the database
+    When you add a new contact to the database you have to assign an id to it
 
-#3. Unify Phone number format

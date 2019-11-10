@@ -24,7 +24,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     final private static String NAME = "students_db";
     final private static Integer VERSION = 1;
     final private static String CREATE_CMD =
-            "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "CREATE TABLE " + TABLE_NAME + " (" + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + DEBTOR_NAME + " TEXT NOT NULL, "
                     + DEBTOR_PHONE + " TEXT NOT NULL, "
                     + DEBTOR_PHOTO_URI + " TEXT );";
@@ -49,7 +49,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             idx = cursor.getColumnIndex(DEBTOR_PHOTO_URI);
             student.setImageUri(Uri.parse(cursor.getString(idx)));
             idx = cursor.getColumnIndex(_ID);
-            student.setId(Long.valueOf(cursor.getString(idx)));
+            student.setId(Integer.parseInt(cursor.getString(idx)));
             students.add(student);
             cursor.moveToNext();
         }
@@ -73,23 +73,32 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public boolean addRecord(String name, String phone, String photoUri){
+    public long addRecord(String name, String phone, String photoUri){
         SQLiteDatabase mDB = getWritableDatabase();
 
         ContentValues values = new ContentValues();
+       // values.put(DatabaseOpenHelper._ID,);
         values.put(DatabaseOpenHelper.DEBTOR_NAME, name);
         values.put(DatabaseOpenHelper.DEBTOR_PHONE, phone);
         values.put(DatabaseOpenHelper.DEBTOR_PHOTO_URI, photoUri);
 
-        return mDB.insert(DatabaseOpenHelper.TABLE_NAME, null , values) != -1;
+         long id = mDB.insert(DatabaseOpenHelper.TABLE_NAME, null , values) ;
+        readDBdata();
+        System.out.println("NEWLY ADDED ID                     " + id );
+         return id;
+
+    }
+    public boolean deleteRecord(long id){
+        SQLiteDatabase sqLiteDatabase =getWritableDatabase();
+        return sqLiteDatabase.delete(TABLE_NAME, _ID +"=?",new String[]{String.valueOf(id)}) > 0;
     }
     void deleteDatabase() {
         mContext.deleteDatabase(NAME);
     }
 
-    public static String getId() {
-        return _ID;
-    }
+//    public static String getId() {
+//        return _ID;
+//    }
 
     public static String getDebtorName() {
         return DEBTOR_NAME;

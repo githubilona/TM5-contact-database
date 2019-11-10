@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 public class Student implements Parcelable {
-    private Long id;
+    private long id;
     private String name;
     private String phone;
     private Uri imageUri;
@@ -20,6 +20,13 @@ public class Student implements Parcelable {
     }
 
     public Student(String name, String phone, Uri image) {
+        this.name = name;
+        this.phone = phone;
+        this.imageUri = image;
+    }
+
+    public Student(long id, String name, String phone, Uri image) {
+        this.id = id;
         this.name = name;
         this.phone = phone;
         this.imageUri = image;
@@ -77,11 +84,11 @@ public class Student implements Parcelable {
         this.imageUri = imageUri;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 }

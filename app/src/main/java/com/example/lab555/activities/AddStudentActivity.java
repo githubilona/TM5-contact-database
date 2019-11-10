@@ -43,9 +43,9 @@ public class AddStudentActivity extends AppCompatActivity {
         switch (reqCode) {
             case (1):
                 if (resultCode == Activity.RESULT_OK) {
-                    Uri contctDataVar = data.getData();
+                    Uri contactDataVar = data.getData();
 
-                    Cursor cursor = getContentResolver().query(contctDataVar, null,
+                    Cursor cursor = getContentResolver().query(contactDataVar, null,
                             null, null, null);
                     if (cursor.getCount() > 0) {
                         while (cursor.moveToNext()) {

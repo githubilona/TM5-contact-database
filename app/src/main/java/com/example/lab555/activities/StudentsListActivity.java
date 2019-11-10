@@ -65,12 +65,27 @@ public class StudentsListActivity extends AppCompatActivity {
 
         for (int i = itemCount - 1; i >= 0; i--) {
             if (checkedItemsPositions.get(i)) {
+                System.out.println("item count          "+ itemCount);
                 checked[i] = false;
+
+                long id = students.get(i).getId();
+                System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii          "+ i);
+                System.out.println("             students.get(i) "+ students.get(i).getId() + "name "+ students.get(i).getName());
+
+
+
+                // w bazie kazdy student ma przypiane id w momencie dodawanie nowego relordu. Ale studednci przechowywanie w liscie
+                // keidy sa do niej dodawanie nie maja przypisywanego id. Powyzej medtoda getId(). pobiera id z obiektu stduenta a nie
+                // id przypisane automatycznie w bazie danych
+                mDbHelper.deleteRecord(id);
                 adapter.remove(i);
+                System.out.println("iiiiDDDDDDDDDDDDD       "+ id);
+                adapter.notifyDataSetChanged();
+
             }
         }
         //checkedItemsPositions.clear(); don't work
-        adapter.notifyDataSetChanged();
+      //  adapter.notifyDataSetChanged();
 
     }
 
@@ -92,8 +107,8 @@ public class StudentsListActivity extends AppCompatActivity {
                 CharSequence resultPhone = data.getCharSequenceExtra("resultPhone");
                 Uri photoUri = data.getParcelableExtra("photoUri");
 
-                addStudent(new Student(resultName + "", resultPhone + "", photoUri));
-                mDbHelper.addRecord(resultName+"", resultPhone+"", photoUri+"");
+                long id = mDbHelper.addRecord(resultName+"", resultPhone+"", photoUri+"");
+                addStudent(new Student(id,resultName + "", resultPhone + "", photoUri));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Name and phone can't be empty!", Toast.LENGTH_LONG).show();
@@ -197,11 +212,14 @@ public class StudentsListActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students_list);
+
+        mDbHelper = new DatabaseOpenHelper(this);
+        students = mDbHelper.readDBdata();
+
 
         removeButton = findViewById(R.id.removeButton);
         addButton = findViewById(R.id.addButton);
@@ -210,20 +228,14 @@ public class StudentsListActivity extends AppCompatActivity {
 
         listView = findViewById(R.id.listView);
 
-        mDbHelper = new DatabaseOpenHelper(this);
-
-
-        students = mDbHelper.readDBdata();
-
         setSimpleListView();
+
+
         // checked= adapter.getChecked();
 
 
 //        students.add(new Student("Contact 1 ", "343-545-354"));
 //        students.add(new Student("Contact 2 ", "676-567-863"));
-
-
-
 
     }
 
