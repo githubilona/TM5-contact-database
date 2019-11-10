@@ -2,8 +2,6 @@ package com.example.lab555.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -20,18 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.lab555.LayoutType;
 import com.example.lab555.R;
 import com.example.lab555.SparseBooleanArrayParcelable;
+import com.example.lab555.db.DatabaseOpenHelper;
 import com.example.lab555.pojo.Student;
 import com.example.lab555.adapters.StudentsAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_NAME;
-import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_PHONE;
-import static com.example.lab555.activities.DatabaseOpenHelper.DEBTOR_PHOTO_URI;
-import static com.example.lab555.activities.DatabaseOpenHelper.TABLE_NAME;
-import static com.example.lab555.activities.DatabaseOpenHelper._ID;
 
 public class StudentsListActivity extends AppCompatActivity {
 

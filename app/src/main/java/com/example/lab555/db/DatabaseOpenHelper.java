@@ -1,4 +1,4 @@
-package com.example.lab555.activities;
+package com.example.lab555.db;
 
 import android.content.ContentValues;
 import android.content.Context;
