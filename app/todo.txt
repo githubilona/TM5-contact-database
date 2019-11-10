@@ -6,6 +6,7 @@ TODO #2. Unify Phone number format
 
 TODO #3. one data structure for students (currently I have local List<Student> and students in db)
 
+TODO #4. delete contact -> add contact -> ArrayIndexOutOfBoundsException
 
 SOLVED PROBLEMS:
 1. Import from contacts photo isn't displayed - Permission Denial Exception

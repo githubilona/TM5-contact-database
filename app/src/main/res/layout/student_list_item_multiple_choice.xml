@@ -3,31 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingTop="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="31dp"
-            android:layout_height="35dp"
-            android:layout_marginStart="252dp"
-            android:layout_marginTop="44dp"
-            android:textSize="14dp"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
 
         <TextView
             android:id="@+id/studentPhoneTextView"
-            android:layout_width="222dp"
-            android:layout_height="48dp"
+            android:layout_width="164dp"
+            android:layout_height="32dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="64dp"
-            android:padding="15dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="36dp"
+            android:padding="5dp"
             android:text="TextView"
             android:textColor="#178B5C"
             android:textSize="15dp"
@@ -36,24 +28,36 @@
 
         <TextView
             android:id="@+id/studentNameTextView"
-            android:layout_width="214dp"
-            android:layout_height="63dp"
+            android:layout_width="218dp"
+            android:layout_height="38dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="4dp"
             android:layout_toEndOf="@+id/imageView"
-            android:padding="15dp"
+            android:padding="5dp"
             android:text="TextView"
-            android:textSize="30dp"
+            android:textSize="20dp"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:background="#CFCFCF"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:paddingBottom="10dp"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="32dp"
+            android:layout_height="31dp"
+            android:layout_marginStart="268dp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
