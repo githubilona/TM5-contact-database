@@ -62,24 +62,23 @@ public class StudentsAdapter extends BaseAdapter {
         image.setImageURI(student.getImageUri());
 
 
-        if(layout==R.layout.student_list_item_multiple_choice){
+        if (layout == R.layout.student_list_item_multiple_choice) {
             checkBoxes = new ArrayList<>();
             CheckBox checkBox = row.findViewById(R.id.checkBox);
-        checkBox.setTag(Integer.valueOf(i)); // set the tag so we can identify the correct row in the listener
-        checkBox.setChecked(checked[i]); // set the status as we stored it
-        checkBox.setOnCheckedChangeListener(mListener); // set the listener
+            checkBox.setTag(Integer.valueOf(i)); // set the tag so we can identify the correct row in the listener
+            checkBox.setChecked(checked[i]); // set the status as we stored it
+            checkBox.setOnCheckedChangeListener(mListener); // set the listener
             checkBoxes.add(checkBox);
 
-       }
-
+        }
         return row;
     }
 
     CompoundButton.OnCheckedChangeListener mListener = new CompoundButton.OnCheckedChangeListener() {
 
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            checked[(Integer)buttonView.getTag()] = isChecked; // get the tag so we know the row and store the status
-            System.out.println("listiner "+ Arrays.toString(checked));
+            checked[(Integer) buttonView.getTag()] = isChecked; // get the tag so we know the row and store the status
+            System.out.println("listiner " + Arrays.toString(checked));
         }
     };
 

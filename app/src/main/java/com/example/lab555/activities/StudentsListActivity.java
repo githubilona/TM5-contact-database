@@ -65,27 +65,19 @@ public class StudentsListActivity extends AppCompatActivity {
 
         for (int i = itemCount - 1; i >= 0; i--) {
             if (checkedItemsPositions.get(i)) {
-                System.out.println("item count          "+ itemCount);
                 checked[i] = false;
 
                 long id = students.get(i).getId();
-                System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii          "+ i);
-                System.out.println("             students.get(i) "+ students.get(i).getId() + "name "+ students.get(i).getName());
-
-
-
-                // w bazie kazdy student ma przypiane id w momencie dodawanie nowego relordu. Ale studednci przechowywanie w liscie
-                // keidy sa do niej dodawanie nie maja przypisywanego id. Powyzej medtoda getId(). pobiera id z obiektu stduenta a nie
-                // id przypisane automatycznie w bazie danych
+                // W bazie kazdy student ma przypiane id w momencie dodawanie nowego rekordu.
+                // Powyzej medtoda getId() pobiera id z obiektu Student a nie id przypisane automatycznie w bazie danych.
+                // Gdy dodajemy studenta do lokalnej listy to trzeba przypisać jawnie w kodzie, studeci zapisywani do bazy mają
+                // id przypisywane automatycznie w klasie DatabaseOpenHelper
                 mDbHelper.deleteRecord(id);
                 adapter.remove(i);
-                System.out.println("iiiiDDDDDDDDDDDDD       "+ id);
-                adapter.notifyDataSetChanged();
-
             }
         }
         //checkedItemsPositions.clear(); don't work
-      //  adapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -107,18 +99,14 @@ public class StudentsListActivity extends AppCompatActivity {
                 CharSequence resultPhone = data.getCharSequenceExtra("resultPhone");
                 Uri photoUri = data.getParcelableExtra("photoUri");
 
-                long id = mDbHelper.addRecord(resultName+"", resultPhone+"", photoUri+"");
-                addStudent(new Student(id,resultName + "", resultPhone + "", photoUri));
+                long id = mDbHelper.addRecord(resultName + "", resultPhone + "", photoUri + "");
+                addStudent(new Student(id, resultName + "", resultPhone + "", photoUri));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Name and phone can't be empty!", Toast.LENGTH_LONG).show();
             }
         }
-
-
-
     }
-
 
     private void setSimpleListView() {
         removeButton.setVisibility(View.VISIBLE);
@@ -154,10 +142,8 @@ public class StudentsListActivity extends AppCompatActivity {
         // Always call the superclass so it can save the view hierarchy state
         //  savedInstanceState.putStringArrayList("MyStrings", (ArrayList<String>) myStrings);
         savedInstanceState.putParcelableArrayList("Students", (ArrayList<? extends Parcelable>) students);
-        //savedInstanceState.putParcelableArrayList("Students", (ArrayList<? extends Parcelable>) new ArrayList<Student>(students));
         savedInstanceState.putInt("Index", index);
         savedInstanceState.putSerializable("LayoutType", layoutType);
-
 
         checkedItemsPositions = listView.getCheckedItemPositions();
         itemCount = listView.getCount();
@@ -196,6 +182,10 @@ public class StudentsListActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method is used only to check elements in the listView when the screen is rotated
+     * It's not working
+     */
     public void checkElements() {
         //   fillArray();
         List<CheckBox> checkBoxes = adapter.getCheckBoxes();
@@ -206,10 +196,8 @@ public class StudentsListActivity extends AppCompatActivity {
             if (checkedItemsPositions.get(i)) {
                 Log.i("checked ", "@@@@ " + i);
                 listView.setItemChecked(i, true); // not working
-
             }
         }
-
     }
 
     @Override
@@ -229,13 +217,6 @@ public class StudentsListActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         setSimpleListView();
-
-
-        // checked= adapter.getChecked();
-
-
-//        students.add(new Student("Contact 1 ", "343-545-354"));
-//        students.add(new Student("Contact 2 ", "676-567-863"));
 
     }
 

@@ -4,6 +4,8 @@ TODO #1. Checked checkbox remains unchecked after screen rotation - (If you crea
 
 TODO #2. Unify Phone number format
 
+TODO #3. one data structure for students (currently I have local List<Student> and students in db)
+
 
 SOLVED PROBLEMS:
 1. Import from contacts photo isn't displayed - Permission Denial Exception
@@ -12,3 +14,11 @@ SOLVED PROBLEMS:
 2. Can't delete newly added contact from the database
     When you add a new contact to the database you have to assign an id to it
 
+
+_________________________
+How to access your database :
+1. open cmd
+2. cd C:\Users\Ilona\AppData\Local\Android\Sdk\platform-tools>
+2. adb shell (the virtual device must be running)
+3. sqlite3 /data/data/com.example.lab555/databases/students_db
+4. SELECT * FROM students;  (query your db)

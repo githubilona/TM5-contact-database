@@ -134,7 +134,6 @@ public class AddStudentActivity extends AppCompatActivity {
            returnIntent.putExtra("photoUri", Uri.parse(photoUri));
        }
 
-
         if (name.toString().equals("") || phone.toString().equals("")) {
             setResult(Activity.RESULT_CANCELED, returnIntent);
         } else {
@@ -155,8 +154,6 @@ public class AddStudentActivity extends AppCompatActivity {
 
         imageView.setImageResource(R.drawable.empty);
         //  imageView.setImageURI(Uri.parse("content://com.android.contacts/display_photo/4"));
-
-
 
     }
 
