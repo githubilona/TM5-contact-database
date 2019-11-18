@@ -21,6 +21,7 @@ import com.example.lab555.SparseBooleanArrayParcelable;
 import com.example.lab555.db.DatabaseOpenHelper;
 import com.example.lab555.model.Student;
 import com.example.lab555.adapters.StudentsAdapter;
+import com.example.lab555.tasks.AddStudentTask;
 import com.example.lab555.tasks.LoadJsonTask;
 import com.example.lab555.tasks.MyJsonResponseListener;
 
@@ -29,6 +30,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +100,31 @@ public class StudentsListActivity extends AppCompatActivity {
         setMultipleChoiceView();
     }
 
+    public void addStudentREST(Long id, String name, String phone, Uri photoUri){
+//        LoadJsonTask loadJsonTask = new LoadJsonTask(new MyJsonResponseListener() {
+//            @Override
+//            public void onJsonResponseChange(String string) {
+//                System.out.println("RESPONSE ADD " + string);
+//
+//            }
+//        });
+//        loadJsonTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor?token="+token+"&dId=____1___&dName=___2__&dPhone=9999");
+
+        AddStudentTask addStudentTask = new AddStudentTask();
+//        addStudentTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor?" +
+//                        "token=79e52052-3b9a-41e8-a06b-1b767cb29dce" +
+//                        "&dId=.......0000000000000000...&dName=.00000000000..&dPhone=.000000000000000000..");
+        try {
+            addStudentTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor",
+                    "token=" + URLEncoder.encode(token, "UTF-8") ,
+                    "dId=" + URLEncoder.encode(id+"", "UTF-8"),
+                    "dName=" +URLEncoder.encode(name, "UTF-8"),
+                    "dPhone=" +URLEncoder.encode(phone, "UTF-8"));
+                  //  "dUri=" +URLEncoder.encode(photoUri+"", "UTF-8")); //serwer nie zapisuje zdjęć
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode,
                                     Intent data) {
@@ -109,6 +137,7 @@ public class StudentsListActivity extends AppCompatActivity {
 
                 Long id = mDbHelper.addRecord(resultName + "", resultPhone + "", photoUri + "");
                 addStudent(new Student(id, resultName + "", resultPhone + "", photoUri));
+                addStudentREST(id,resultName +"",resultPhone+"",photoUri);
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 Toast.makeText(this, "Name and phone can't be empty!", Toast.LENGTH_LONG).show();
@@ -218,7 +247,7 @@ public class StudentsListActivity extends AppCompatActivity {
             for (int i = 0; i < debtorsJsonArray.length(); i++){
                 JSONObject jsonArrayObj = debtorsJsonArray.getJSONObject(i);
 
-                // TODO fix setting image if the path is invalid (null, cant find file becouse path is invalid eg. hf3662dff )
+                // TODO fix setting image if the path is invalid (null, cant find file because path is invalid eg. hf3662dff )
                 Long id;
                 Uri uri=null;
                 try{

@@ -29,6 +29,7 @@ public class LoadJsonTask extends AsyncTask<String,String,String> {
             //sprawdzamy czy kod odpowiedzi http sie zgadza
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 //inicjalizujemy buffor danych, w naszym przypadku wiemy że może być mały
+                System.out.println("connected !!!!!!!!!!!!");
                 BufferedReader input = new BufferedReader(new InputStreamReader(conn.getInputStream()), 1024);
                 String line = null;
                 while ((line = input.readLine()) != null) {
