@@ -19,9 +19,16 @@ import com.example.lab555.LayoutType;
 import com.example.lab555.R;
 import com.example.lab555.SparseBooleanArrayParcelable;
 import com.example.lab555.db.DatabaseOpenHelper;
-import com.example.lab555.pojo.Student;
+import com.example.lab555.model.Student;
 import com.example.lab555.adapters.StudentsAdapter;
+import com.example.lab555.tasks.LoadJsonTask;
+import com.example.lab555.tasks.MyJsonResponseListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,6 +47,7 @@ public class StudentsListActivity extends AppCompatActivity {
     int itemCount;
     LayoutType layoutType;
     boolean[] checked;
+    String token;
 
     DatabaseOpenHelper mDbHelper;
 
@@ -99,7 +107,7 @@ public class StudentsListActivity extends AppCompatActivity {
                 CharSequence resultPhone = data.getCharSequenceExtra("resultPhone");
                 Uri photoUri = data.getParcelableExtra("photoUri");
 
-                long id = mDbHelper.addRecord(resultName + "", resultPhone + "", photoUri + "");
+                Long id = mDbHelper.addRecord(resultName + "", resultPhone + "", photoUri + "");
                 addStudent(new Student(id, resultName + "", resultPhone + "", photoUri));
             }
             if (resultCode == Activity.RESULT_CANCELED) {
@@ -200,6 +208,64 @@ public class StudentsListActivity extends AppCompatActivity {
         }
     }
 
+
+    public void getListOfDebtors(String response) throws JSONException {
+        JSONObject job = new JSONObject(response);
+        String responseType = job.getString("response");
+        if(responseType.equals("success")){
+            System.out.println("......................");
+            JSONArray debtorsJsonArray = new JSONArray(job.getString("debtors"));
+            for (int i = 0; i < debtorsJsonArray.length(); i++){
+                JSONObject jsonArrayObj = debtorsJsonArray.getJSONObject(i);
+
+                // TODO fix setting image if the path is invalid (null, cant find file becouse path is invalid eg. hf3662dff )
+                Long id;
+                Uri uri=null;
+                try{
+                    id =Long.parseLong(jsonArrayObj.getString("Id"));
+                    uri =Uri.parse(jsonArrayObj.getString("Photo"));
+                    System.out.println("uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu "+ uri);
+                    if(uri == null || uri.equals(Uri.EMPTY) || uri.equals("")  || uri.equals(null)){
+                        System.out.println("null URI OOOOOOO");
+                        uri = Uri.parse("android.resource://com.example.lab555/" + R.drawable.empty);
+                    }
+                }catch(Exception e ){
+                    id=0L;
+                    uri = Uri.parse("android.resource://com.example.lab555/" + R.drawable.empty);
+
+                }
+
+                System.out.println("uri ................. "+ uri);
+                Student student = new Student(
+                        id,
+                        jsonArrayObj.getString("Name"),
+                        jsonArrayObj.getString("Phone"),
+                        uri
+                );
+                addStudent(student);
+            }
+            //adapter.notifyDataSetChanged();
+        }
+        for(Student debtor : students){
+            System.out.println(debtor.toString());
+        }
+    }
+
+    public void getListOfDebtorsTask(String token){
+        LoadJsonTask task = new LoadJsonTask(new MyJsonResponseListener() {
+            @Override
+            public void onJsonResponseChange(String responseWithDebtorsList) {
+                System.out.println("^^^^^^^^^^^^^^^^^^^^"  +responseWithDebtorsList);
+                try {
+                    getListOfDebtors(responseWithDebtorsList);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        task.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/GetDebtors"+"?token="+token);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,6 +283,12 @@ public class StudentsListActivity extends AppCompatActivity {
         listView = findViewById(R.id.listView);
 
         setSimpleListView();
+
+        token = getIntent().getStringExtra("token");
+        System.out.println("token from INTENT " + token);
+        getListOfDebtorsTask(token);
+
+
 
     }
 

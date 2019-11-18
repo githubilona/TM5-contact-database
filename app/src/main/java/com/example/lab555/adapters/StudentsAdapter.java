@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.lab555.R;
-import com.example.lab555.pojo.Student;
+import com.example.lab555.model.Student;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -1,12 +1,11 @@
-package com.example.lab555.pojo;
+package com.example.lab555.model;
 
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 public class Student implements Parcelable {
-    private long id;
+    private Long id;
     private String name;
     private String phone;
     private Uri imageUri;
@@ -25,7 +24,7 @@ public class Student implements Parcelable {
         this.imageUri = image;
     }
 
-    public Student(long id, String name, String phone, Uri image) {
+    public Student(Long id, String name, String phone, Uri image) {
         this.id = id;
         this.name = name;
         this.phone = phone;
@@ -84,11 +83,11 @@ public class Student implements Parcelable {
         this.imageUri = imageUri;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 }

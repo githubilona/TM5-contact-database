@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
-import com.example.lab555.pojo.Student;
+import com.example.lab555.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +49,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
             idx = cursor.getColumnIndex(STUDENT_PHOTO_URI);
             student.setImageUri(Uri.parse(cursor.getString(idx)));
             idx = cursor.getColumnIndex(_ID);
-            student.setId(Integer.parseInt(cursor.getString(idx)));
+            student.setId(Long.parseLong(cursor.getString(idx)));
             students.add(student);
             cursor.moveToNext();
         }
@@ -72,7 +72,7 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public long addRecord(String name, String phone, String photoUri) {
+    public Long addRecord(String name, String phone, String photoUri) {
         SQLiteDatabase mDB = getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -80,13 +80,13 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         values.put(DatabaseOpenHelper.STUDENT_PHONE, phone);
         values.put(DatabaseOpenHelper.STUDENT_PHOTO_URI, photoUri);
 
-        long id = mDB.insert(DatabaseOpenHelper.TABLE_NAME, null, values);
+        Long id = mDB.insert(DatabaseOpenHelper.TABLE_NAME, null, values);
         readDBdata();
         System.out.println("NEWLY ADDED ID                     " + id);
         return id;
     }
 
-    public boolean deleteRecord(long id) {
+    public boolean deleteRecord(Long id) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         return sqLiteDatabase.delete(TABLE_NAME, _ID + "=?", new String[]{String.valueOf(id)}) > 0;
     }
