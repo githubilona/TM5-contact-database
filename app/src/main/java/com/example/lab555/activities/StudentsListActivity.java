@@ -302,7 +302,9 @@ public class StudentsListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_students_list);
 
         mDbHelper = new DatabaseOpenHelper(this);
-        students = mDbHelper.readDBdata();
+        //students = mDbHelper.readDBdata();
+        // TODO usunac dodawanie studentow do bazy na telefonie, wszytsko teraz na bazie na serwerze ma byc robione
+        students = new ArrayList<>();
 
 
         removeButton = findViewById(R.id.removeButton);
@@ -316,8 +318,8 @@ public class StudentsListActivity extends AppCompatActivity {
 
         token = getIntent().getStringExtra("token");
         System.out.println("token from INTENT " + token);
-        //  getListOfDebtorsTask(token); - czyta liste  studentow spod adresu serwera,
-        //  po dodawaniu studentow z formularza ta metoda nie jest potrzebna, bo studenci czytani sa z bd
+        getListOfDebtorsTask(token);
+
 
 
 
