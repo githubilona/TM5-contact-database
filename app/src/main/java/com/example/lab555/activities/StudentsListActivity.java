@@ -23,6 +23,7 @@ import com.example.lab555.model.Student;
 import com.example.lab555.adapters.StudentsAdapter;
 import com.example.lab555.tasks.AddStudentTask;
 import com.example.lab555.tasks.LoadJsonTask;
+import com.example.lab555.tasks.LoadLoginTask;
 import com.example.lab555.tasks.MyJsonResponseListener;
 
 import org.json.JSONArray;
@@ -78,13 +79,14 @@ public class StudentsListActivity extends AppCompatActivity {
             if (checkedItemsPositions.get(i)) {
                 checked[i] = false;
 
-                long id = students.get(i).getId();
+                Long id = students.get(i).getId();
                 // W bazie kazdy student ma przypiane id w momencie dodawanie nowego rekordu.
                 // Powyzej medtoda getId() pobiera id z obiektu Student a nie id przypisane automatycznie w bazie danych.
                 // Gdy dodajemy studenta do lokalnej listy to trzeba przypisać jawnie w kodzie, studeci zapisywani do bazy mają
                 // id przypisywane automatycznie w klasie DatabaseOpenHelper
                 mDbHelper.deleteRecord(id);
                 adapter.remove(i);
+                deleteStudentREST(id);
             }
         }
         //checkedItemsPositions.clear(); don't work
@@ -100,20 +102,19 @@ public class StudentsListActivity extends AppCompatActivity {
         setMultipleChoiceView();
     }
 
+    public void deleteStudentREST(Long id){
+        LoadLoginTask deleteStudentTask = new LoadLoginTask();
+        try {
+            deleteStudentTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/DeleteDebtor",
+                    "token=" + URLEncoder.encode(token, "UTF-8") ,
+                    "dId=" + URLEncoder.encode(id+"", "UTF-8"));
+            System.out.println("USUWANIE STUDENTA +++++++ ......");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
     public void addStudentREST(Long id, String name, String phone, Uri photoUri){
-//        LoadJsonTask loadJsonTask = new LoadJsonTask(new MyJsonResponseListener() {
-//            @Override
-//            public void onJsonResponseChange(String string) {
-//                System.out.println("RESPONSE ADD " + string);
-//
-//            }
-//        });
-//        loadJsonTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor?token="+token+"&dId=____1___&dName=___2__&dPhone=9999");
-
         AddStudentTask addStudentTask = new AddStudentTask();
-//        addStudentTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor?" +
-//                        "token=79e52052-3b9a-41e8-a06b-1b767cb29dce" +
-//                        "&dId=.......0000000000000000...&dName=.00000000000..&dPhone=.000000000000000000..");
         try {
             addStudentTask.execute("http://apps.ii.uph.edu.pl:88/MSK/MSK/AddDebtor",
                     "token=" + URLEncoder.encode(token, "UTF-8") ,
@@ -315,7 +316,8 @@ public class StudentsListActivity extends AppCompatActivity {
 
         token = getIntent().getStringExtra("token");
         System.out.println("token from INTENT " + token);
-        getListOfDebtorsTask(token);
+        //  getListOfDebtorsTask(token); - czyta liste  studentow spod adresu serwera,
+        //  po dodawaniu studentow z formularza ta metoda nie jest potrzebna, bo studenci czytani sa z bd
 
 
 
